@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -10,20 +9,16 @@ import (
 
 var DB *gorm.DB
 
-func Connect() {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s database=%s port=%s TimeZone=Asia/Jakarta",
-		os.Getenv("PG_HOST"),
-		os.Getenv("PG_USER"),
-		os.Getenv("PG_PASS"),
-		os.Getenv("PG_DB"),
-		os.Getenv("PG_DB"),
-		os.Getenv("PG_PORT"),
-	)
-
+func ConnectDatabase() {
+	// Connect to the database
+	dsn := os.Getenv("DATABASE_URL")
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
 	if err != nil {
-		panic(err)
+		panic("gaggal connect ke database")
 	}
 
 	DB = database
+
+	DB.AutoMigrate(&User{})
 }

@@ -1,35 +1,26 @@
 package main
 
 import (
+	"main/controllers"
+	"main/db"
+	"main/intializers"
 	"main/middlewares"
-	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
-	// db.Connect()
+	//load env
+	initializers.LoadEnv()
+	//connect database
+    db.ConnectDatabase()
 
-	gin.SetMode(gin.DebugMode)
-	engine := gin.Default()
-	engine.Use(middlewares.Cors())
-	routes(engine)
+	//init router
+	r := gin.Default()
 
-	host := os.Getenv("HOST") + ":" + os.Getenv("PORT")
+  	r.POST("/register", controllers.Register) // Request register
+	r.POST("/login", controllers.Login) // Request login
+	r.GET("/validasi",middlewares.Requireauth, controllers.Validasi) // Request validasi login
 
-	err = engine.Run(host)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func routes(r *gin.Engine) {
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(200, "pong")
-	})
+  	r.Run()
 }
