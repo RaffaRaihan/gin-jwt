@@ -20,7 +20,7 @@ func main() {
 
   	r.POST("/register", controllers.Register) // Request register
 	r.POST("/login", controllers.Login) // Request login
-	r.GET("/validasi",middlewares.Requireauth, controllers.Validasi) // Request validasi login
+	r.GET("/validasi", middlewares.Requireauth, controllers.Validasi) // Request validasi login
 
   	r.Run()
 }
