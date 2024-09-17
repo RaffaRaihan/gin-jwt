@@ -14,11 +14,13 @@ import (
 func Register(c *gin.Context){
 	// mendapatkan email/password di req body
 	var Body struct{
+		Nama		string 	`json:"nama"`
 		Email 		string
 		Password 	string
+		Telepon		int		`json:"telepon"`
 	}
 
-	if c.Bind(&Body) != nil{
+	if c.ShouldBind(&Body) != nil{
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "gagal mendapatkan request body",
 		})
@@ -37,7 +39,7 @@ func Register(c *gin.Context){
 	}
 
 	//buat user baru
-	user := db.User{Email: Body.Email, Password: string(hash)}
+	user := db.User{Email: Body.Email, Password: string(hash), Nama: Body.Nama, Telepon: Body.Telepon}
 	result := db.DB.Create(&user)
 
 	if result.Error != nil {
@@ -125,4 +127,18 @@ func Validasi(c *gin.Context){
 	c.JSON(http.StatusOK, gin.H{
 		"message": user,
 	})
+}
+
+func ListUsers(c *gin.Context) {
+	var listUser db.User
+    if len(listUser.Email) == 0 {
+        c.JSON(http.StatusOK, gin.H{
+            "message": "No users are currently logged in",
+        })
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{
+        "logged_in_users": listUser,
+    })
 }
