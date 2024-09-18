@@ -128,17 +128,3 @@ func Validasi(c *gin.Context){
 		"message": user,
 	})
 }
-
-func ListUsers(c *gin.Context) {
-	var listUser db.User
-    if len(listUser.Email) == 0 {
-        c.JSON(http.StatusOK, gin.H{
-            "message": "No users are currently logged in",
-        })
-        return
-    }
-
-    c.JSON(http.StatusOK, gin.H{
-        "logged_in_users": listUser,
-    })
-}
