@@ -39,7 +39,7 @@ func Register(c *gin.Context){
 	}
 
 	//buat user baru
-	user := db.User{Email: Body.Email, Password: string(hash), Nama: Body.Nama, Telepon: Body.Telepon}
+	user := db.User{Nama: Body.Nama, Email: Body.Email, Password: string(hash), Telepon: Body.Telepon}
 	result := db.DB.Create(&user)
 
 	if result.Error != nil {
