@@ -9,24 +9,24 @@ import (
 	"gorm.io/gorm"
 )
 
-func Index(c *gin.Context) {
-	var product []db.Product
+func GetAc(c *gin.Context) {
+	var ac []db.Ac
 
-	db.DB.Find(&product)
+	db.DB.Find(&ac)
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"ac": ac,
 	})
 }
 
-func Show(c *gin.Context) {
-	var product db.Product
+func ReadAc(c *gin.Context) {
+	var ac db.Ac
 	id := c.Param("ID")
 
-	if err := db.DB.First(&product, id).Error; err != nil{
+	if err := db.DB.First(&ac, id).Error; err != nil{
 		switch err{
 			case gorm.ErrRecordNotFound:
 				c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-					"error": "product not found",
+					"error": "ac not found",
 				})
 				return
 			default:
@@ -37,49 +37,49 @@ func Show(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"ac": ac,
 	})
 }
 
-func Create(c *gin.Context) {
-	var product db.Product
+func CreateAc(c *gin.Context) {
+	var ac db.Ac
 
-	if err := c.ShouldBindJSON(&product); err != nil {
+	if err := c.ShouldBindJSON(&ac); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	db.DB.Create(&product)
+	db.DB.Create(&ac)
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"ac": ac,
 	})
 }
 
-func Update(c *gin.Context) {
-	var product db.Product
+func UpdateAc(c *gin.Context) {
+	var ac db.Ac
 	id := c.Param("ID")
 
-	if err := c.ShouldBindJSON(&product); err != nil {
+	if err := c.ShouldBindJSON(&ac); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	if db.DB.Model(&product).Where("id = ?", id).Updates(&product).RowsAffected == 0 {
+	if db.DB.Model(&ac).Where("id = ?", id).Updates(&ac).RowsAffected == 0 {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error": "gagal mengupdate data product",
+			"error": "gagal mengupdate data ac",
 		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"product": "data berhasil di perbaharui",
+		"ac": "data berhasil di perbaharui",
 	})
 }
 
-func Delete(c *gin.Context) {
-	var product db.Product
+func DeleteAc(c *gin.Context) {
+	var ac db.Ac
 
 	var input struct{
 		Id json.Number
@@ -93,13 +93,13 @@ func Delete(c *gin.Context) {
 	}
 
 	id, _ := input.Id.Int64()
-	if db.DB.Delete(&product, id).RowsAffected == 0{
+	if db.DB.Delete(&ac, id).RowsAffected == 0{
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error": "gagal menghapus data product",
+			"error": "gagal menghapus data ac",
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"product": "data berhasil di hapus",
+		"ac": "data berhasil di hapus",
 	})
 }

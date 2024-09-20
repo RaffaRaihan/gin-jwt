@@ -9,24 +9,24 @@ import (
 	"gorm.io/gorm"
 )
 
-func Index(c *gin.Context) {
-	var product []db.Product
+func GetService(c *gin.Context) {
+	var services []db.Services
 
-	db.DB.Find(&product)
+	db.DB.Find(&services)
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"services": services,
 	})
 }
 
-func Show(c *gin.Context) {
-	var product db.Product
+func ReadService(c *gin.Context) {
+	var services db.Services
 	id := c.Param("ID")
 
-	if err := db.DB.First(&product, id).Error; err != nil{
+	if err := db.DB.First(&services, id).Error; err != nil{
 		switch err{
 			case gorm.ErrRecordNotFound:
 				c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-					"error": "product not found",
+					"error": "services not found",
 				})
 				return
 			default:
@@ -37,49 +37,49 @@ func Show(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"services": services,
 	})
 }
 
-func Create(c *gin.Context) {
-	var product db.Product
+func CreateService(c *gin.Context) {
+	var services db.Services
 
-	if err := c.ShouldBindJSON(&product); err != nil {
+	if err := c.ShouldBindJSON(&services); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	db.DB.Create(&product)
+	db.DB.Create(&services)
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"services": services,
 	})
 }
 
-func Update(c *gin.Context) {
-	var product db.Product
+func UpdateService(c *gin.Context) {
+	var services db.Services
 	id := c.Param("ID")
 
-	if err := c.ShouldBindJSON(&product); err != nil {
+	if err := c.ShouldBindJSON(&services); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	if db.DB.Model(&product).Where("id = ?", id).Updates(&product).RowsAffected == 0 {
+	if db.DB.Model(&services).Where("id = ?", id).Updates(&services).RowsAffected == 0 {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error": "gagal mengupdate data product",
+			"error": "gagal mengupdate data services",
 		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"product": "data berhasil di perbaharui",
+		"services": "data berhasil di perbaharui",
 	})
 }
 
-func Delete(c *gin.Context) {
-	var product db.Product
+func DeleteService(c *gin.Context) {
+	var services db.Services
 
 	var input struct{
 		Id json.Number
@@ -93,13 +93,13 @@ func Delete(c *gin.Context) {
 	}
 
 	id, _ := input.Id.Int64()
-	if db.DB.Delete(&product, id).RowsAffected == 0{
+	if db.DB.Delete(&services, id).RowsAffected == 0{
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error": "gagal menghapus data product",
+			"error": "gagal menghapus data services",
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"product": "data berhasil di hapus",
+		"services": "data berhasil di hapus",
 	})
 }

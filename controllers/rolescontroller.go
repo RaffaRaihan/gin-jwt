@@ -9,24 +9,24 @@ import (
 	"gorm.io/gorm"
 )
 
-func Index(c *gin.Context) {
-	var product []db.Product
+func GetRoles(c *gin.Context) {
+	var roles []db.Roles
 
-	db.DB.Find(&product)
+	db.DB.Find(&roles)
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"roles": roles,
 	})
 }
 
-func Show(c *gin.Context) {
-	var product db.Product
+func ReadRoles(c *gin.Context) {
+	var roles db.Roles
 	id := c.Param("ID")
 
-	if err := db.DB.First(&product, id).Error; err != nil{
+	if err := db.DB.First(&roles, id).Error; err != nil{
 		switch err{
 			case gorm.ErrRecordNotFound:
 				c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-					"error": "product not found",
+					"error": "roles not found",
 				})
 				return
 			default:
@@ -37,49 +37,49 @@ func Show(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"roles": roles,
 	})
 }
 
-func Create(c *gin.Context) {
-	var product db.Product
+func CreateRoles(c *gin.Context) {
+	var roles db.Roles
 
-	if err := c.ShouldBindJSON(&product); err != nil {
+	if err := c.ShouldBindJSON(&roles); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	db.DB.Create(&product)
+	db.DB.Create(&roles)
 	c.JSON(http.StatusOK, gin.H{
-		"product": product,
+		"roles": roles,
 	})
 }
 
-func Update(c *gin.Context) {
-	var product db.Product
+func UpdateRoles(c *gin.Context) {
+	var roles db.Roles
 	id := c.Param("ID")
 
-	if err := c.ShouldBindJSON(&product); err != nil {
+	if err := c.ShouldBindJSON(&roles); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	if db.DB.Model(&product).Where("id = ?", id).Updates(&product).RowsAffected == 0 {
+	if db.DB.Model(&roles).Where("id = ?", id).Updates(&roles).RowsAffected == 0 {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error": "gagal mengupdate data product",
+			"error": "gagal mengupdate data roles",
 		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"product": "data berhasil di perbaharui",
+		"roles": "data berhasil di perbaharui",
 	})
 }
 
-func Delete(c *gin.Context) {
-	var product db.Product
+func DeleteRoles(c *gin.Context) {
+	var roles db.Roles
 
 	var input struct{
 		Id json.Number
@@ -93,13 +93,13 @@ func Delete(c *gin.Context) {
 	}
 
 	id, _ := input.Id.Int64()
-	if db.DB.Delete(&product, id).RowsAffected == 0{
+	if db.DB.Delete(&roles, id).RowsAffected == 0{
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error": "gagal menghapus data product",
+			"error": "gagal menghapus data roles",
 		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"product": "data berhasil di hapus",
+		"roles": "data berhasil di hapus",
 	})
 }

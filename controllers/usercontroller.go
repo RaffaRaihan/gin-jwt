@@ -17,7 +17,7 @@ func Register(c *gin.Context){
 		Nama		string 	`json:"nama"`
 		Email 		string
 		Password 	string
-		Telepon		int		`json:"telepon"`
+		Telepon		int16	`json:"telepon"`
 	}
 
 	if c.ShouldBind(&Body) != nil{
@@ -59,11 +59,13 @@ func Register(c *gin.Context){
 func Login(c *gin.Context){
 	// mendapatkan email/password di req body
 	var Body struct{
+		Nama 		string	`json:"nama"`
 		Email 		string
 		Password 	string
+		Telepon 	int16	`json:"telepon"`
 	}
 
-	if c.Bind(&Body) != nil{
+	if c.ShouldBind(&Body) != nil{
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "gagal mendapatkan request body",
 		})

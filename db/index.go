@@ -22,4 +22,7 @@ func ConnectDatabase() {
 
 	DB.AutoMigrate(&User{})
 	DB.AutoMigrate(&Product{})
+	DB.AutoMigrate(&Services{})
+	DB.AutoMigrate(&Roles{})
+	DB.AutoMigrate(&Ac{})
 }

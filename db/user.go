@@ -7,5 +7,5 @@ type User struct {
 	Nama	 string	`json:"nama"`
 	Email    string `gorm:"unique"`
 	Password string
-	Telepon  int 	`json:"telepon"`
+	Telepon  int16 	`json:"telepon"`
 }
